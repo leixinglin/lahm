@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+    		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+			http://www.springframework.org/schema/aop
+			http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<!--  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+     		<property name="location">
+     			<value>classpath:jdbc.properties</value>
+     		</property>
+     </bean> -->
+     
+     
+     
+     
+   <!-- 配置连接池 -->
+	<bean id="masterDataSource" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<!-- 数据库驱动 -->
+		<property name="driverClass" value="${jdbc.master.driver}" />
+		<!-- 相应驱动的jdbcUrl -->
+		<property name="jdbcUrl" value="${jdbc.master.url}" />
+		<!-- 数据库的用户名 -->
+		<property name="username" value="${jdbc.master.userName}" />
+		<!-- 数据库的密码 -->
+		<property name="password" value="${jdbc.master.passWord}" />
+		
+		<!-- 检查数据库连接池中空闲连接的间隔时间，单位是分，默认值：240，如果要取消则设置为0 -->
+		<property name="idleConnectionTestPeriod" value="60" />
+		<!-- 连接池中未使用的链接最大存活时间，单位是分，默认值：60，如果要永远存活设置为0 -->
+		<property name="idleMaxAge" value="30" />
+		<!-- 每个分区最大的连接数 -->
+		<property name="maxConnectionsPerPartition" value="500" />
+		<!-- 每个分区最小的连接数 -->
+		<property name="minConnectionsPerPartition" value="5" />
+	</bean>
+	
+	<!-- 配置连接池 -->
+	<bean id="slaveDataSource" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<!-- 数据库驱动 -->
+		<property name="driverClass" value="${jdbc.master.driver}" />
+		<!-- 相应驱动的jdbcUrl -->
+		<property name="jdbcUrl" value="${jdbc.slave.url}" />
+		<!-- 数据库的用户名 -->
+		<property name="username" value="${jdbc.slave.userName}" />
+		<!-- 数据库的密码 -->
+		<property name="password" value="${jdbc.slave.passWord}" />
+		<!-- 检查数据库连接池中空闲连接的间隔时间，单位是分，默认值：240，如果要取消则设置为0 -->
+		<property name="idleConnectionTestPeriod" value="60" />
+		<!-- 连接池中未使用的链接最大存活时间，单位是分，默认值：60，如果要永远存活设置为0 -->
+		<property name="idleMaxAge" value="30" />
+		<!-- 每个分区最大的连接数 -->
+		<property name="maxConnectionsPerPartition" value="500" />
+		<!-- 每个分区最小的连接数 -->
+		<property name="minConnectionsPerPartition" value="5" />
+	</bean>
+    
+
+	
+	<!-- 定义数据源，使用自己实现的数据源 -->
+	<bean id="dataSource" class="com.lhh.datasource.DynamicDataSource">
+		<!-- 设置多个数据源 -->
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<!-- 这个key需要和程序中的key一致 -->
+				<entry key="master" value-ref="masterDataSource"/>
+				<entry key="slave" value-ref="slaveDataSource"/>
+			</map>
+		</property>
+		<!-- 设置默认的数据源，这里默认走写库 -->
+		<property name="defaultTargetDataSource" ref="masterDataSource"/> 
+	</bean>
+	
+	
+	
+	
+     <!-- 在Spring中，可以使用 init-method 和 destroy-method 在bean 配置文件属性用于在bean初始化和销毁某些动作时。
+     	这是用来替代 InitializingBean和DisposableBean接口 -->
+	<!-- <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		基本属性 url、user、password
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.userName}" />
+		<property name="password" value="${jdbc.passWord}" />
+		<property name="initialSize" value="${ds.initialSize}" />
+		<property name="minIdle" value="${ds.minIdle}" />
+		<property name="maxActive" value="${ds.maxActive}" />
+		<property name="maxWait" value="${ds.maxWait}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${ds.timeBetweenEvictionRunsMillis}" />
+		<property name="minEvictableIdleTimeMillis" value="${ds.minEvictableIdleTimeMillis}" />
+		<property name="validationQuery" value="SELECT 'x'" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="true" />
+		<property name="testOnReturn" value="true" />
+		打开PSCache，并且指定每个连接上PSCache的大小
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+			value="20" />
+		超过时间限制是否回收
+		<property name="removeAbandoned" value="true" />
+		超时时间；单位为秒。180秒=3分钟
+		<property name="removeAbandonedTimeout" value="180" />
+	</bean> -->
+
+	
+	<!-- 配置mybatis -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 当当网sharding-jdbc 数据源 -->
+		<!-- <property name="dataSource" ref="shardingDataSource" /> -->
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<!-- mapper扫描 ： **表示多级目录，*表示多个字符，且在classpath后面的*不可少，否则通配符无效 -->
+		 <property name="mapperLocations" value="classpath*:com/lhh/mapper/**/*Mapper.xml" /> 
+		 <property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageInterceptor">
+					<!-- pagehelper插件配置 -->
+					<property name="properties">
+						<value>
+							helperDialect=mysql
+							reasonable=true
+							supportMethodsArguments=true
+							params=count=countSql
+							autoRuntimeDialect=true
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+	</bean>
+
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate"
+		scope="prototype">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+    
+  
+     <!-- 生成Dao代理对象 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/> -->
+        <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate"/>
+        <property name="basePackage" value="com.lhh.dao"/>
+    </bean>
+
+	<!-- 配置事务管理 -->
+	<bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 定义事务策略 -->
+	 <tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 定义查询方法都是只读的 -->
+			<tx:method name="query*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="get*" read-only="true" />
+ 
+			<!-- 主库执行操作，事务传播行为定义为默认行为 -->
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+ 
+			<!-- 其他方法使用默认事务策略 -->
+			 <tx:method name="*" /> 
+		</tx:attributes>
+	</tx:advice>
+	
+	<!--动态数据源切换 注解配置-->
+	<!-- <bean id="dataSourceAspect" class="com.lhh.datasource.DataSourceAspect" /> -->
+	<bean class="com.lhh.datasource.DataSourceAspect" id="dataSourceAspect">
+		<!-- 指定事务策略 -->
+		<property name="txAdvice" ref="txAdvice"/>
+		<!-- 指定slave方法的前缀（非必须） -->
+		<property name="slaveMethodStart" value="query,find,get"/>
+	</bean>
+	<aop:config>
+		<!-- 定义切面，所有的service的所有方法 -->
+		<aop:pointcut id="dataSourcePointcut" expression="execution(* com.lhh.service..*.*(..)))" />
+		<!-- 应用事务策略到Service切面 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="dataSourcePointcut"/>
+		
+		<!-- 将切面应用到自定义的切面处理器上，-9999保证该切面优先级最高执行 -->
+		<aop:aspect ref="dataSourceAspect" order="-9999">
+			<aop:before method="before" pointcut-ref="dataSourcePointcut" />
+		</aop:aspect>
+	</aop:config>
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	
+
+
+</beans>

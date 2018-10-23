@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd	
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+		
+	
+	<!-- 扫描controller包 -->
+	<context:component-scan base-package="com.lhh.controller"/>
+	
+	<!-- 防止静态资源交给DispatcherServlet处理 -->
+	<mvc:default-servlet-handler />
+	
+	
+	<!-- 解决@ResponseBody 的实现类其默认的编码是 iso-8859-1的问题 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/plain;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<!-- 对静态资源文件的访问 restful -->
+	<mvc:resources mapping="/static/**" location="/static/" />
+	
+	<!-- 配置SpringMVC的视图解析器 -->
+	  <bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	 	<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" /> 
+	</bean>  
+	
+	<!-- 支持上传文件 -，如最大上传值及最小上传值 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize">
+			<value>104857600</value>
+		</property>
+		<!-- 读取文件到内存的最大字节默认1024 -->
+		<property name="maxInMemorySize">
+			<value>4096</value>
+		</property>
+		<property name="defaultEncoding">
+			<value>utf-8</value>
+		</property>
+	</bean>
+	
+	<!-- 拦截器配置 -->
+	<!-- <mvc:interceptors>
+	        配置Token拦截器，防止用户重复提交数据
+	        <mvc:interceptor>
+	        	<mvc:mapping path="/**"/>
+	        	<mvc:exclude-mapping path="/static/**"/>
+	            <bean class="com.lhh.interceptor.TokenInterceptor"/>
+	        </mvc:interceptor>
+	</mvc:interceptors> -->
+</beans>

@@ -1,0 +1,19 @@
+@CHARSET "UTF-8";
+.header_nav{display: flex;background: #009688;position: absolute;z-index:1;
+	width: 100%;
+	/* background: rgba(0, 105 ,60, 0.7); */
+	background: rgba(0, 0 ,0, 0.7);
+}
+.header_nav .layui-logo{line-height:45px;font: 18px/1.5 "Microsoft Yahei","Helvetica Neue";
+	color:white;display: flex;justify-content:center;align-items:center;
+	flex:1;
+	letter-spacing:6px;
+}
+.header_nav .layui-logo img{width: 50px;height: 45px;}
+.header_nav .layui-nav{flex:2;
+	display: flex;justify-content:flex-end;align-items:center;
+}
+.layui-bg-green{background-color:transparent !important;}
+.header_nav .layui-nav .layui-nav-item{line-height:45px;
+
+}

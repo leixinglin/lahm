@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhh.dao.UsersDao">
+	
+	<!-- <cache type="com.lhh.common.RedisCache" /> -->
+	<!-- mybatis二级缓存 -->
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache">
+			<property name="timeToIdleSeconds" value="600" />
+			<property name="timeToLiveSeconds" value="600" />
+			<property name="maxEntriesLocalHeap" value="1000" />
+			<property name="maxEntriesLocalDisk" value="10000000" />
+			<property name="memoryStoreEvictionPolicy" value="LRU" />
+	</cache>
+
+  <resultMap id="BaseResultMap" type="com.lhh.pojo.Users">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
+    <result column="nickName" jdbcType="VARCHAR" property="nickname" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_name, user_password, nickName
+  </sql>
+
+  <select id="findAll" resultType="Users">
+  select
+  	<include refid="Base_Column_List"/>
+  	from users
+  </select>
+  
+  <select id="findByName" resultType="java.lang.String">
+  select
+  	roles.role_name
+  		from users join roles on users.role_id =roles.id
+  	 <where>
+  	 	<if test="name!=null and name!=''">
+  	 		and user_name=#{name}
+  	 	</if>
+  	 </where>
+  </select>
+  
+  <select id="findByNameAndPass" resultType="Users">
+  	select
+  		* from users
+  	 
+  	 <where>
+  	 	<if test="name!=null and name!=''">
+  	 		and user_name=#{name}
+  	 	</if>
+  	 	<if test="pass!=null and pass!=''">
+  	 		and user_password=#{pass}
+  	 	</if>
+  	 </where>
+  </select>
+
+	<insert id="saveUser" parameterType="pd">
+		insert into users(user_name,user_password,role_id,nickName)
+		values(#{userName},#{passWord},#{role},#{nickName})
+	</insert>
+</mapper>

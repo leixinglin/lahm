@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx.xsd
+						http://www.springframework.org/schema/task
+                        http://www.springframework.org/schema/task/spring-task.xsd">
+	<!-- 启用注解 -->
+	<context:annotation-config />
+	
+
+	<!-- 启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描 -->
+	<context:component-scan base-package="com.lhh">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+
+	<!-- 引入多个属性文件 -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations"> <!-- PropertyPlaceholderConfigurer类中有个locations属性，接收的是一个数组，即我们可以在下面配好多个properties文件 -->
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:redis.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	
+	<!-- 通知 -->
+	<!-- <tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			对insert,update,delete 开头的方法进行事务管理,只要有异常就回滚
+			<tx:method name="insert*" propagation="REQUIRED"
+				rollback-for="java.lang.Throwable" />
+			<tx:method name="save*" propagation="REQUIRED"
+				rollback-for="java.lang.Throwable" />
+			<tx:method name="update*" propagation="REQUIRED"
+				rollback-for="java.lang.Throwable" />
+			<tx:method name="delete*" propagation="REQUIRED"
+				rollback-for="java.lang.Throwable" />
+			<tx:method name="*" propagation="REQUIRED" rollback-for="java.lang.Throwable" />
+			get开头的查询方法表示实时性搞，直接进入主库查询
+			<tx:method name="get*" read-only="false" propagation="REQUIRED" rollback-for="java.lang.Throwable" />
+			
+			select,count开头的方法,开启只读,提高数据库访问性能
+			<tx:method name="select*" read-only="true" />
+			<tx:method name="count*" read-only="true" />
+			<tx:method name="search*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="query*" read-only="true" />
+			<tx:method name="check*" read-only="true" />
+			对其他方法 使用默认的事务管理
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice> -->
+	
+
+	<!-- 配置使Spring采用CGLIB代理 -->
+	  <aop:aspectj-autoproxy proxy-target-class="true" /> 
+
+
+
+	<!-- 配置Quartz定时任务 -->
+	
+	<!-- task任务扫描注解 -->
+	<task:annotation-driven />
+
+
+
+	  <import resource="spring-mybatis.xml" /> 
+	 <!-- <import resource="spring-mybatis2.xml" /> -->
+	  <import resource="spring-cache.xml" />  
+	 <import resource="spring-shiro.xml" />
+	 <import resource="spring-redis.xml" />  
+ <import resource="spring-email.xml" />  
+ <import resource="spring-rabbitMQ.xml" />  
+</beans>

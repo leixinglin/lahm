@@ -1,0 +1,50 @@
+@charset "utf-8";
+*{padding: 0px;margin: 0px;}
+body{
+	background: url('../../images/login/body.jpg');
+	background-size: cover;
+	height:100vh;
+	width: 98vw;
+
+	display: flex;
+	justify-content:flex-start;
+	align-items:center;
+	flex-direction:column;
+}
+.titleName{height:160px;width: 100%;display: flex;
+justify-content:center;
+	align-items:center;
+	color: #FFFFFF;
+    font-size: 2.5em;
+    
+    letter-spacing:16px;
+    font-weight: bold;}
+#loginContent{width: 400px;height:350px;background: rgba(40, 40, 40, 0.78);
+	display: flex;
+	justify-content:center;
+	align-items:center;
+	
+}
+
+#loginContent .login_wrapper{height: 80%;width: 80%;}
+#loginContent .login_wrapper .layui-form-item input{
+	font: 15px/1.5 "Microsoft Yahei","Helvetica Neue";
+    color: #34495e;}
+#loginContent .login_wrapper .login_submit{margin-top: 20px;
+
+width: 100%; height:50px;}
+
+#loginContent .login_wrapper .login_submit button{
+	height:50px;
+	font-size: 18px;
+	letter-spacing:30px;
+	font-weight: bold;
+}
+.login_error{color:red;position:relative;top:10px;text-align: right;
+display: none;
+left: 200px;
+opacity: 0.5;
+}
+.forget_pass {text-align: right;display:block;position:relative;top:10px;}
+.forget_pass a{color:#589FEF;text-align: right;}
+.forget_pass a:hover{color:yellow;}
