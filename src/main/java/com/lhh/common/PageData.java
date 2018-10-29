@@ -16,7 +16,7 @@ public class PageData extends HashMap implements Map{
 	
 	private static final long serialVersionUID = 1L;
 	
-	Map map = null;
+	Map<Object,Object> map = null;
 	HttpServletRequest request;
 	
 	public PageData(HttpServletRequest request){
@@ -55,7 +55,7 @@ public class PageData extends HashMap implements Map{
 	}
 	
 	public PageData() {
-		map = new HashMap();
+		map = new HashMap<>();
 	}
 	
 	@Override

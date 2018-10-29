@@ -18,7 +18,8 @@
 	
 
 	<!-- 启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描 -->
-	<context:component-scan base-package="com.lhh">
+	<context:component-scan base-package="com.lhh" >
+	    
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
@@ -83,5 +84,5 @@
 	 <import resource="spring-shiro.xml" />
 	 <import resource="spring-redis.xml" />  
  <import resource="spring-email.xml" />  
- <import resource="spring-rabbitMQ.xml" />  
+   <import resource="spring-rabbitMQ.xml" />
 </beans>

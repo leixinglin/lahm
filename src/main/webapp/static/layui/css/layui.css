@@ -823,6 +823,9 @@ a cite {
 .layui-layout-admin .layui-header {
 	background-color: black;
 }
+.layui-layout-admin .bg-header{
+	background-color: #1AAEC7;
+}
 
 .layui-layout-admin .layui-side {
 	top: 60px;
@@ -859,7 +862,7 @@ a cite {
 	height: 100%;
 	line-height: 60px;
 	text-align: center;
-	color: #009688;
+	color: #FFFFFF;
 	font-size: 16px
 }
 
@@ -1860,7 +1863,7 @@ a cite {
 }
 
 .layui-input, .layui-select, .layui-textarea {
-	height: 49px;
+	height: 39px;
 	line-height: 1.3;
 	line-height: 38px\9;
 	border-width: 1px;
@@ -1935,8 +1938,8 @@ a cite {
 	display: inline-block;
     margin-bottom: 10px;
     font-weight: 500;
-    color: #fff;
-    font-size: 1.2em;
+    color: #043842;
+    font-size: 1.1em;
 	/* text-align: right */
 }
 
@@ -1964,7 +1967,7 @@ a cite {
 }
 
 .layui-form-item .layui-input-inline {
-	float: left;
+	/* float: left; */
 	width: 190px;
 	margin-right: 10px
 }

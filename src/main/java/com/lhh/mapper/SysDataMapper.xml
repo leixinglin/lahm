@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhh.dao.SysDataDao">
+  <resultMap id="BaseResultMap" type="SysData">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="create_time" jdbcType="DATE" property="createTime" />
+    <result column="channel" jdbcType="VARCHAR" property="channel" />
+    <result column="active" jdbcType="INTEGER" property="active" />
+    <result column="product" jdbcType="VARCHAR" property="product" />
+    <result column="income" jdbcType="DECIMAL" property="income" />
+    <result column="user" jdbcType="VARCHAR" property="user" />
+    <result column="shows" jdbcType="BIGINT" property="shows" />
+    <result column="click" jdbcType="INTEGER" property="click" />
+    <result column="install" jdbcType="INTEGER" property="install" />
+    <result column="unitPrice" jdbcType="DECIMAL" property="unitprice" />
+  </resultMap>
+	   
+  <insert id="saveData" parameterType="SysData" keyProperty="id" useGeneratedKeys="true">
+       insert into sys_data(create_time,channel,active)values 
+       (#{createTime},#{channel},#{active});
+      
+  </insert>
+  <insert id="saveDatas" parameterType="java.util.List" >
+       insert into sys_data(create_time,channel,active)values
+       <foreach collection="list" item="item" index="index" separator=",">
+           (
+           #{item.createTime},#{item.channel},#{item.active})
+       </foreach>
+  </insert>
+  
+  <select id="findList" parameterType="pd" resultMap="BaseResultMap">
+      select * from sys_data where 1=1
+     
+          <if test="startTime!=null and startTime!=''">
+              and create_time&gt;=#{startTime}
+          </if>
+          <if test="endTime!=null and endTime!=''">
+              and create_time&lt;=#{endTime}
+          </if>
+      
+  </select>
+  
+  <delete id="removeAll">
+      
+      delete from sys_data
+  </delete>
+</mapper>

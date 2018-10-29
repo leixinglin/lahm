@@ -1,7 +1,13 @@
 package com.lhh.utils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 
 public class Tools {
 
@@ -66,6 +72,18 @@ public class Tools {
 	}
 
 	
-	
+	@SuppressWarnings("deprecation")
+	public static String excelTime(Cell cell) {
+		String guarantee_time = null;
+		if (DateUtil.isCellDateFormatted(cell)) {
+			// 用于转化为日期格式
+			Date d = cell.getDateCellValue();
+			// System.err.println(d.toString());
+			// DateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+			guarantee_time = formater.format(d);
+		}
+		return guarantee_time;
+	}
 	
 }

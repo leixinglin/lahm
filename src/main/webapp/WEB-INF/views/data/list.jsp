@@ -9,48 +9,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>深圳市银松互动科技有限公司</title>
 
-<link rel="stylesheet" href="${ctx}static/layui/css/layui.css">
+<link rel="stylesheet" href="${ctx}/static/layui/css/layui.css">
 <style type="text/css">
-a {
-	text-decoration: none;
-}
-
-.file {
-	position: relative;
-	display: inline-block;
-	background: #65D3E3;
-	border: 1px solid #99D3F5;
-	border-radius: 4px;
-	padding: 4px 12px;
-	overflow: hidden;
-	color: #1E88C7;
-	text-decoration: none;
-	text-indent: 0;
-	line-height: 28px;
-	/* margin-left: 320px; */
-}
-
-.file input {
-	position: absolute;
-	font-size: 100px;
-	right: 0;
-	top: 0;
-	opacity: 0;
-}
-
-.file:hover {
-	border-color: #78C3F3;
-	color: #FFF;
-	text-decoration: none;
-}
-
+body{padding: 15px;}
 </style>
 </head>
 <body>
-	<form action="${ctx}/contentList" method="post" id="contentForm"
+	<form action="${ctx}/data/list" method="post" id="contentForm"
 		enctype="multipart/form-data">
 		<input type="hidden" id="currPage" name="currentPage"
-			value="${currentPage}" /> <input type="hidden" id="pageTotal"
+			value="${pageInfo.pageNum}" /> <input type="hidden" id="pageTotal"
 			value="${pageInfo.total}" /> <input type="hidden" 
 			name="pageSize" id="pageSize" value="${pageInfo.pageSize}" />
 		<div class="layui-form">
@@ -58,17 +26,17 @@ a {
 				<div class="layui-inline">
 					<label class="layui-form-label">起始时间</label>
 					<div class="layui-input-inline">
-						<input type="text" class="layui-input" id="test1"
+						<input type="text" class="layui-input" id="startTime"
 							autocomplete="off" name="startTime" value="${pd.startTime}"
-							placeholder="yyyy-MM-dd">
+							placeholder="开始日期">
 					</div>
 				</div>
 				<div class="layui-inline">
 					<label class="layui-form-label">结束时间</label>
 					<div class="layui-input-inline">
-						<input type="text" class="layui-input" id="test1-1"
+						<input type="text" class="layui-input" id="endTime"
 							autocomplete="off" name="endTime" value="${pd.endTime}"
-							placeholder="yyyy-MM-dd">
+							placeholder="结束日期">
 					</div>
 				</div>
 				<div class="layui-inline">
@@ -76,23 +44,35 @@ a {
 				</div>
 				<shiro:hasRole name="admin">
 					<div class="layui-inline">
-						<a href="javascript:" class="file">选择文件 <input type="file"
-							name="file" id="file">
-						</a>
+						<button type="button" class="layui-btn layui-btn-warm" id="uploadExcel"><i class="layui-icon">&#xe656;</i>上传模板</button>
 					</div>
 					<div class="layui-inline">
-						<a href="javascript:" id="deleteAll" class="file">清空数据</a>
+						<button type="button" class="layui-btn layui-btn layui-btn-warm btn-delete">清空数据</button>
 					</div>
 				</shiro:hasRole>
-
+				
 			</div>
+			<div class="layui-form-item">
+			    <div class="layui-inline">
+			      <button id="addData" class="layui-btn layui-btn-normal layui-btn-sm" type="button"><i class="layui-icon">&#xe61f;</i></button>
+			    </div>
+			    <div class="layui-inline">
+			      <button class="layui-btn layui-btn-normal layui-btn-sm" type="button"><i class="layui-icon">&#xe642;</i></button>
+			    </div>
+			    <div id="delData" class="layui-inline">
+			      <button class="layui-btn layui-btn-normal layui-btn-sm" type="button"><i class="layui-icon">&#xe640;</i></button>
+			    </div>
+			  </div>
 		</div>
 	</form>
-	<div id="contentTab">
+	<div id="contentTab" class="layui-form">
 		<table class="layui-table">
 			<!--  <caption>悬停表格布局</caption> -->
 			<thead>
 				<tr>
+					<th width="3%">
+						<input type="checkbox" lay-skin="primary" lay-filter="allChoose"/>
+					</th>
 					<th>时间</th>
 					<th>渠道</th>
 					<th>激活</th>
@@ -101,7 +81,8 @@ a {
 			<tbody id="tabBody">
 				<c:forEach var="data" items="${dataList}">
 					<tr>
-						<td>${data.create_time}</td>
+						<td><input type="checkbox" value="${data.id}" name="dataCheck" lay-skin="primary" lay-filter="dataChoose"></td>
+						<td>${data.createTime}</td>
 						<td>${data.channel}</td>
 						<td>${data.active}</td>
 					</tr>
@@ -110,6 +91,7 @@ a {
 			<shiro:hasRole name="admin">
 				<tfoot>
 					<tr id="tabFoot">
+						<th></th>
 						<th>总计</th>
 						<th>--</th>
 						<th>0</th>
@@ -128,64 +110,57 @@ a {
 	<script src="${ctx}/static/layui/layui.js"></script>
 	<!-- Excel -->
 	<script type="text/javascript">
-		$("#file").change(function() {
-			var file = $("#file").val();
-			if (file.lastIndexOf(".xls") < 0) {//可判断以.xls和.xlsx结尾的excel  
-				layer.msg('只能选择Excel');
-				return;
-			}
-			$.ajax({
-				url : '${ctx}/upLoadExcel',
-				cache : false,
-				type : 'POST',
-				data : new FormData($('#contentForm')[0]),
-				asyne : false,
-				processData : false,
-				contentType : false,
-				datatype : "json",
-				beforeSend : function() {
-					/* layer.load(); */
-					$("#loading").show();
-				},
-				complete : function() {
-					$("#loading").hide();
-					/* layer.closeAll('loading'); */
-				},
-				success : function(returndata) {
-					if (returndata.msg == 1) {
-						window.location = "${ctx}/contentList";
-					} else {
-						layer.msg("出现错误！");
-					}
-				}
-			});
-		});
-		$("#deleteAll").click(function() {
-			$.post("deleteAll", function(data) {
-				if (data.msg == 1) {
-					window.location = "${ctx}/contentList";
-				}
-			});
+
+		function refreshPage(){
+			window.location.reload();
+		}
+		
+		$(".btn-delete").click(function() {
+			window.location.href='${ctx}/data/removeAll';
 		});
 	</script>
 	<!-- 分页 -->
 	<script type="text/javascript">
+	var delList=[];
+	//表单渲染
+	//layui复选框操作（form表单要有class=layui-form,th要有lay-filter="allChoose" ）
+	layui.use('form', function(){
+	  var form = layui.form;
+	  //全选
+	  form.on('checkbox(allChoose)', function(data){
+	    var dataChecks=$(data.elem).parents('#contentTab').find("#tabBody tr input[type='checkbox']");
+	    dataChecks.each(function(index,item){
+	    	item.checked=data.elem.checked;
+	    });
+	    form.render('checkbox');
+	  });
+	  
+	  form.on('checkbox(dataChoose)', function(data){
+		  if(data.elem.checked){
+			  delList.push(data.value);
+		  }else{
+			  var index = delList.indexOf(data.value);
+			  delList.splice(index,1);
+		  }
+		  console.log(data.elem); //得到checkbox原始DOM对象
+		  console.log(data.elem.checked); //是否被选中，true或者false
+		  console.log(data.value); //复选框value值，也可以通过data.elem.value得到
+		  console.log(data.othis); //得到美化后的DOM对象
+		}); 
+	});
+	
+		//开始结束日期
 		layui.use('laydate', function() {
 			var laydate = layui.laydate;
-
-			//常规用法
 			laydate.render({
-				elem : '#test1'
+				elem : '#startTime'
 			});
-
-			//国际版
 			laydate.render({
-				elem : '#test1-1',
-
+				elem : '#endTime',
 			});
-
 		});
 
+		//分页
 		layui.use([ 'laypage', 'layer' ], function() {
 			var laypage = layui.laypage, layer = layui.layer;
 
@@ -201,30 +176,77 @@ a {
 				jump : function(obj, first) {
 					console.log(obj.limit);
 
-					if (obj.limit != pageSize) {
+					 if (obj.limit != pageSize&&pageSize!=0) {
 						$("#pageSize").val(obj.limit);
 						$("#contentForm").submit();
 					}
-					if (obj.curr != currPage) {
+					if (obj.curr != currPage&&currPage!=0) {
 						$("#currPage").val(obj.curr);
 						$("#contentForm").submit();
 					}
-
+ 
+					
 				},
 				layout : [ 'prev', 'page', 'next', 'limit', 'count' ],
 				curr : currPage
 			});
 		});
 
+		//计算总计
 		var sum1 = 0;
 		$("#tabBody tr").each(function() {
 
-			var num1 = $(this).find("td:eq(2)").text();
+			var num1 = $(this).find("td:eq(3)").text();
 
 			sum1 = sum1 + parseInt(num1);
 		})
 
-		$("#tabFoot th:eq(2)").text(sum1);
+		$("#tabFoot th:eq(3)").text(sum1);
+		
+		
+		//上传模版
+		var loadIndex;
+		layui.use('upload', function(){
+			  var $ = layui.jquery
+			  ,upload = layui.upload;
+			  
+			upload.render({
+			    elem: '#uploadExcel'
+			    ,url: '${ctx}/data/upload'
+			    ,accept: 'file' //普通文件
+			    ,exts: 'xls|xlsx' 
+			    ,choose:function(){
+			    	loadIndex = layer.load();
+			    }
+			    ,done: function(res){
+			      console.log(res);
+			      //关闭
+			      layer.close(loadIndex);
+			      if(res.code=="1"){
+			    	  refreshPage();
+			      }
+			    },error:function(){
+			    	alert("错误！");
+			    }
+			  });
+		});
+		
+		var saveOpen;
+		$("#addData").click(function(){
+			 saveOpen=layer.open({
+				  title:"编辑信息",
+				  type: 2, 
+				  content: '${ctx}/data/edit', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+				  anim:2,
+				  area: ['500px', '500px']
+			}); 
+		});
+		
+		$("#delData").click(function(){
+			console.log(delList);
+		});
+		
+		
 	</script>
 </body>
 </html>

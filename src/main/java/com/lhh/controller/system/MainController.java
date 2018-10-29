@@ -34,4 +34,5 @@ public class MainController extends BaseController{
 		mv.addObject("navList", pageInfo.getList());
 		return mv;
 	}
+
 }
