@@ -81,8 +81,9 @@
 	  <import resource="spring-mybatis.xml" /> 
 	 <!-- <import resource="spring-mybatis2.xml" /> -->
 	  <import resource="spring-cache.xml" />  
-	 <import resource="spring-shiro.xml" />
+	 
 	 <import resource="spring-redis.xml" />  
+	 <import resource="spring-shiro.xml" />
  <import resource="spring-email.xml" />  
    <import resource="spring-rabbitMQ.xml" />
 </beans>

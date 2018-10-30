@@ -30,4 +30,8 @@ public class SysDataService {
 	 public int removeAll(){
 		 return sysDataDao.removeAll();
 	 }
+	 
+	 public void batchDel(String[] ids){
+		 sysDataDao.batchDel(ids);
+	 }
 }

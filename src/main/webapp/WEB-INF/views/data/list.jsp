@@ -70,8 +70,8 @@ body{padding: 15px;}
 			<!--  <caption>悬停表格布局</caption> -->
 			<thead>
 				<tr>
-					<th width="3%">
-						<input type="checkbox" lay-skin="primary" lay-filter="allChoose"/>
+					<th width="2%">
+						<input id="allCheck" type="checkbox" lay-skin="primary" lay-filter="allChoose"/>
 					</th>
 					<th>时间</th>
 					<th>渠道</th>
@@ -128,9 +128,17 @@ body{padding: 15px;}
 	  var form = layui.form;
 	  //全选
 	  form.on('checkbox(allChoose)', function(data){
+		  
 	    var dataChecks=$(data.elem).parents('#contentTab').find("#tabBody tr input[type='checkbox']");
+	    delList=[];
 	    dataChecks.each(function(index,item){
-	    	item.checked=data.elem.checked;
+	    	item.checked=data.elem.checked; 
+	    	if(item.checked){
+	    		delList.push(item.value);
+	    	}else{
+	    		var index = delList.indexOf(item.value);
+				delList.splice(index,1);
+	    	}
 	    });
 	    form.render('checkbox');
 	  });
@@ -138,14 +146,19 @@ body{padding: 15px;}
 	  form.on('checkbox(dataChoose)', function(data){
 		  if(data.elem.checked){
 			  delList.push(data.value);
+			  if(delList.length==$("#pageSize").val()){
+				  document.getElementById("allCheck").checked=data.elem.checked;
+			  }
 		  }else{
 			  var index = delList.indexOf(data.value);
 			  delList.splice(index,1);
+			  document.getElementById("allCheck").checked=data.elem.checked;
 		  }
-		  console.log(data.elem); //得到checkbox原始DOM对象
+		  form.render('checkbox');
+		  /* console.log(data.elem); //得到checkbox原始DOM对象
 		  console.log(data.elem.checked); //是否被选中，true或者false
 		  console.log(data.value); //复选框value值，也可以通过data.elem.value得到
-		  console.log(data.othis); //得到美化后的DOM对象
+		  console.log(data.othis); //得到美化后的DOM对象 */
 		}); 
 	});
 	
@@ -238,12 +251,37 @@ body{padding: 15px;}
 				  type: 2, 
 				  content: '${ctx}/data/edit', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
 				  anim:2,
-				  area: ['500px', '500px']
+				  area: ['500px', '400px']
 			}); 
 		});
 		
 		$("#delData").click(function(){
-			console.log(delList);
+			if(delList.length>0){
+				layer.confirm('你是否真的要删除这'+delList.length+'条数据吗?', {icon: 3, title:'删除提示'}, function(index){
+
+					$.ajax({
+						url:"${ctx}/data/batchDel",
+						data:{ids:delList},
+						dataType:"json",
+						success:function(res){
+							
+							if(res=="1"){
+								refreshPage();
+							}
+						},
+						error:function(){
+							layer.msg("服务器异常！");
+						}
+					});
+					  layer.close(index);
+				});
+			}else{
+				layer.msg("你还未选中数据！");
+			}
+			
+			
+			/*    */
+			
 		});
 		
 		

@@ -10,4 +10,5 @@ public interface SysDataDao {
    int saveData(SysData data);
    List<SysData> findList(PageData pageData);
    int removeAll();
+   void batchDel(String[] ids);
 }

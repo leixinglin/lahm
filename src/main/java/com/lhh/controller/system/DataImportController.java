@@ -73,6 +73,13 @@ public class DataImportController extends BaseController{
 		SysDataService.removeAll();
 		return "redirect:/data/list";
 	}
+	@RequestMapping("/batchDel")
+	@ResponseBody
+	public String batchDel(@RequestParam(value = "ids[]")String[] ids){
+		System.out.println(ids.toString());
+		SysDataService.batchDel(ids);
+		return "1";
+	}
 	
 	@RequestMapping("/upload")
 	@ResponseBody

@@ -44,4 +44,12 @@
       
       delete from sys_data
   </delete>
+  
+  <delete id="batchDel" parameterType="java.util.List">
+      delete from sys_data where id in
+      <foreach collection="array" item="item" open="(" separator="," close=")">
+          
+          #{item}
+      </foreach>
+  </delete>
 </mapper>
