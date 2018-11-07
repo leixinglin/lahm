@@ -85,5 +85,5 @@
 	 <import resource="spring-redis.xml" />  
 	 <import resource="spring-shiro.xml" />
  <import resource="spring-email.xml" />  
-   <import resource="spring-rabbitMQ.xml" />
+   <import resource="spring-rabbitMQ2.xml" />
 </beans>

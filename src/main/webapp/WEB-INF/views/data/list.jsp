@@ -251,8 +251,10 @@ body{padding: 15px;}
 				  type: 2, 
 				  content: '${ctx}/data/edit', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
 				  anim:2,
-				  area: ['500px', '400px']
+				  area: ['500px', '400px'],
+				  maxmin:true
 			}); 
+			 //saveOpen.maxmin=true;
 		});
 		
 		$("#delData").click(function(){
