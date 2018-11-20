@@ -34,4 +34,12 @@ public class SysDataService {
 	 public void batchDel(String[] ids){
 		 sysDataDao.batchDel(ids);
 	 }
+	 
+	 public SysData findById(int id){
+		 return sysDataDao.findById(id);
+	 }
+	 
+	 public void update(SysData sysData){
+		 sysDataDao.update(sysData);
+	 }
 }

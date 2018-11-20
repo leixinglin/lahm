@@ -2,6 +2,12 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"></c:set>
+<%
+    String path = request.getContextPath();
+    String basePath = request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<c:set var="basePath" value="<%=basePath %>"></c:set>
+
 <!DOCTYPE html>
 <html>
  
@@ -16,6 +22,8 @@
 </head>
 
 <body>
+
+
 	<table width="500px;">
 		<thead>
 			<tr><th>用户</th><th>消息</th><th>操作</th></tr>
@@ -37,7 +45,7 @@
 					
 	                if('WebSocket' in window) {
 	                                        console.log("此浏览器支持websocket");
-	                    websocket = new WebSocket("ws://localhost:8080/lahm/websocketDemo/${userId}");
+	                    websocket = new WebSocket("ws://${basePath}websocketDemo/${userId}");
 	                } else if('MozWebSocket' in window) {
 	                    alert("此浏览器只支持MozWebSocket");
 	                } else {

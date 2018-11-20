@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -59,6 +60,11 @@ public class DataImportController extends BaseController{
 	public ModelAndView edit(){
 		return new ModelAndView("data/edit");
 	}
+	@RequestMapping("/edit/{id}")
+	public ModelAndView updatePage(@PathVariable int id){
+		
+		return new ModelAndView("data/edit").addObject("data", SysDataService.findById(id));
+	}
 	
 	@RequestMapping("/save")
 	@ResponseBody
@@ -66,7 +72,16 @@ public class DataImportController extends BaseController{
 		
 		SysDataService.saveData(sysData);
 		
-		return "1";
+		return true;
+	}
+	
+	@RequestMapping("/update")
+	@ResponseBody
+	public Object update(SysData sysData){
+		
+		SysDataService.update(sysData);
+		
+		return true;
 	}
 	@RequestMapping("/removeAll")
 	public String removeAll(){

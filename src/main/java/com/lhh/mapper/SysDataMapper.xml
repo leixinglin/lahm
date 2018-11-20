@@ -40,6 +40,27 @@
       
   </select>
   
+  <select id="findById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+      
+      select * from sys_data where id=#{id}
+  </select>
+  
+  <update id="update" parameterType="SysData">
+      
+      update sys_data 
+      <trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+          <if test="createTime!=null and createTime!=''">
+              create_time=#{createTime},
+          </if>
+          <if test="channel!=null and channel!=''">
+              channel=#{channel},
+          </if>
+          <if test="active!=null">
+              active=#{active},
+          </if>
+      </trim>
+  </update>
+  
   <delete id="removeAll">
       
       delete from sys_data

@@ -14,22 +14,23 @@
 </head>
 <body>
 	<form class="layui-form" action="${ctx}/data/save">
+	 <input type="hidden" name="id" value="${data.id}">
 	  <div class="layui-form-item">
 	    <label class="layui-form-label">创建日期</label>
 	    <div class="layui-input-block">
-	       <input type="text" name="createTime" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+	       <input type="text" name="createTime" value="${data.createTime}" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
 	    </div>
 	  </div>
 	  <div class="layui-form-item">
 	    <label class="layui-form-label">渠道</label>
 	    <div class="layui-input-block">
-	      <input type="text" name="channel" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+	      <input type="text" name="channel" value="${data.channel}" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
 	    </div>
 	  </div>
 	  <div class="layui-form-item">
 	    <label class="layui-form-label">激活数</label>
 	    <div class="layui-input-block">
-	      <input type="text" name="active" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+	      <input type="text" name="active" value="${data.active}" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
 	    </div>
 	  </div>
 	  <div class="layui-form-item">
@@ -57,26 +58,54 @@
 			  console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
 			  console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
 			  console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+			  if(data.field.id!=null&&data.field.id!=""){
+				  $.ajax({
+						 url:"${ctx}/data/update",
+						 data:data.field,
+						 dataType:"json",
+						 beforeSend:function(){
+								layer.load(2, {time: 10*1000});
+						},
+						 success:function(res){
+							 if(res==true){
+								/*  var  index= parent.layer.getFrameIndex(window.saveOpen);
+								 parent.layer.close(index);  */
+								 console.log("ok");
+								 parent.location.reload();
+								 //window.location.reload();
+							 }else{
+								 layer.msg("添加失败！");
+							 }
+						 },
+						 error:function(res){
+							 console.log(res);
+						 }
+					  });
+			  }else{
+				  $.ajax({
+						 url:"${ctx}/data/save",
+						 data:data.field,
+						 dataType:"json",
+						 beforeSend:function(){
+								layer.load(2, {time: 10*1000});
+							},
+						 success:function(res){
+							 if(res==true){
+								/*  var  index= parent.layer.getFrameIndex(window.saveOpen);
+								 parent.layer.close(index);  */
+								 console.log("ok");
+								 parent.location.reload();
+								 //window.location.reload();
+							 }else{
+								 layer.msg("添加失败！");
+							 }
+						 },
+						 error:function(res){
+							 console.log(res);
+						 }
+					  });
+			  }
 			  
-			  $.ajax({
-				 url:"${ctx}/data/save",
-				 data:data.field,
-				 dataType:"json",
-				 success:function(res){
-					 if(res=="1"){
-						/*  var  index= parent.layer.getFrameIndex(window.saveOpen);
-						 parent.layer.close(index);  */
-						 console.log("ok");
-						 parent.location.reload();
-						 //window.location.reload();
-					 }else{
-						 layer.msg("添加失败！");
-					 }
-				 },
-				 error:function(res){
-					 console.log(res);
-				 }
-			  });
 			  return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
 			});
 	});

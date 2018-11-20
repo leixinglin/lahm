@@ -53,10 +53,10 @@ body{padding: 15px;}
 				
 			</div>
 			<div class="layui-form-item">
-			    <div class="layui-inline">
+			    <div class="layui-inline"  >
 			      <button id="addData" class="layui-btn layui-btn-normal layui-btn-sm" type="button"><i class="layui-icon">&#xe61f;</i></button>
 			    </div>
-			    <div class="layui-inline">
+			    <div id="updateData" class="layui-inline">
 			      <button class="layui-btn layui-btn-normal layui-btn-sm" type="button"><i class="layui-icon">&#xe642;</i></button>
 			    </div>
 			    <div id="delData" class="layui-inline">
@@ -257,6 +257,21 @@ body{padding: 15px;}
 			 //saveOpen.maxmin=true;
 		});
 		
+		$("#updateData").click(function(){
+			if(delList.length==1){
+				saveOpen=layer.open({
+					  title:"编辑信息",
+					  type: 2, 
+					  content: '${ctx}/data/edit/'+delList[0], //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+					  anim:2,
+					  area: ['500px', '400px'],
+					  maxmin:true
+				}); 
+			}else{
+				layer.msg("请选择一条数据！");
+			}
+		})
+		
 		$("#delData").click(function(){
 			if(delList.length>0){
 				layer.confirm('你是否真的要删除这'+delList.length+'条数据吗?', {icon: 3, title:'删除提示'}, function(index){
@@ -265,6 +280,9 @@ body{padding: 15px;}
 						url:"${ctx}/data/batchDel",
 						data:{ids:delList},
 						dataType:"json",
+						beforeSend:function(){
+							layer.load(2, {time: 10*1000});
+						},
 						success:function(res){
 							
 							if(res=="1"){
