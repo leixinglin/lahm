@@ -49,6 +49,9 @@ body{padding: 15px;}
 					<div class="layui-inline">
 						<button type="button" class="layui-btn layui-btn layui-btn-warm btn-delete">清空数据</button>
 					</div>
+					<div class="layui-inline">
+						<a href="${ctx}/data/fileDownLoad" class="layui-btn" target="_blank">下载模板</a>
+					</div>
 				</shiro:hasRole>
 				
 			</div>
@@ -63,9 +66,10 @@ body{padding: 15px;}
 			      <button class="layui-btn layui-btn-normal layui-btn-sm" type="button"><i class="layui-icon">&#xe640;</i></button>
 			    </div>
 			  </div>
+			  
 		</div>
 	</form>
-	<div id="contentTab" class="layui-form">
+	<div id="contentTab" class="layui-form" >
 		<table class="layui-table">
 			<!--  <caption>悬停表格布局</caption> -->
 			<thead>

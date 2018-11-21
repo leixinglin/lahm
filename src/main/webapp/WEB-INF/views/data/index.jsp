@@ -50,7 +50,7 @@
 			</div>
 
 
-			<div class="layui-body" style="z-index: 0;" class="layui-anim layui-anim-up">
+			<div class="layui-body layui-anim layui-anim-up" style="z-index: 0;">
 				<!-- 内容主体区域 -->
 				<div style="height: 100%;overflow-y:hidden;">
 					<iframe src="${ctx}/data/list" name="right" frameborder="0" width="100%" height="100%"></iframe>
