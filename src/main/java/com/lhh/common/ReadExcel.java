@@ -2,6 +2,7 @@ package com.lhh.common;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -12,12 +13,18 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -128,7 +135,7 @@ public class ReadExcel {
 			if (row == null) {
 				continue;
 			}
-			System.out.println(r);
+			//System.out.println(r);
 			content = new SysData();
 			// 循环Excel的列
 			for (int c = 0; c < this.totalCells; c++) {
@@ -152,6 +159,39 @@ public class ReadExcel {
 		}
 		return dataList;
 	}
+	
+	 public static void exportExcel(List<SysData> dataList, OutputStream outputStream) throws IOException {
+	        //1.创建工作簿
+		 XSSFWorkbook hwb =new XSSFWorkbook();
+	        //1.1创建合并单元格
+	        //CellRangeAddress cellRangeAddress =new CellRangeAddress(0,0,0,4);
+	        //2.创建工作表
+	        XSSFSheet sheet = hwb.createSheet("用户信息表");
+
+	        //2.1添加合并单元格
+	        //sheet.addMergedRegion(cellRangeAddress);
+	        //3.1创建第一行及单元格
+	        //3.2创建第二行及单元格
+	        XSSFRow row2 = sheet.createRow(0);
+	        String[] row2Cell = {"时间","渠道","激活数"};
+	        for (int i =0 ; i < row2Cell.length ; i++ ){
+	            row2.createCell(i).setCellValue(row2Cell[i]);
+	        }
+	        //3.3创建第三行及单元格
+	        if(dataList!= null && dataList.size()>0){
+	            for(int j=0 ; j<dataList.size() ;j++){
+	                XSSFRow rowUser = sheet.createRow(j+1);
+	                XSSFCell cell=rowUser.createCell(0);
+	                cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+	                cell.setCellValue(dataList.get(j).getCreateTime());
+	                rowUser.createCell(1).setCellValue(dataList.get(j).getChannel());
+	                rowUser.createCell(2).setCellValue(dataList.get(j).getActive());
+	                //rowUser.createCell(4).setCellValue(userList.get(j).getId());
+	            }
+	        }
+	        //5.输出
+	        hwb.write(outputStream);
+	    }
 
 	/**
 	 * 验证EXCEL文件

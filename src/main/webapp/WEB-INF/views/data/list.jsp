@@ -44,13 +44,16 @@ body{padding: 15px;}
 				</div>
 				<shiro:hasRole name="admin">
 					<div class="layui-inline">
-						<button type="button" class="layui-btn layui-btn-warm" id="uploadExcel"><i class="layui-icon">&#xe656;</i>上传模板</button>
+						<button type="button" class="layui-btn layui-btn-warm" id="uploadExcel"><i class="layui-icon">&#xe656;</i>导入模板</button>
+					</div>
+					<div class="layui-inline">
+						<a href="${ctx}/data/exportExcel" class="layui-btn layui-btn-warm" target="_blank">导出模板</a>
 					</div>
 					<div class="layui-inline">
 						<button type="button" class="layui-btn layui-btn layui-btn-warm btn-delete">清空数据</button>
 					</div>
 					<div class="layui-inline">
-						<a href="${ctx}/data/fileDownLoad" class="layui-btn" target="_blank">下载模板</a>
+						<a href="${ctx}/data/fileDownLoad" class="layui-btn layui-btn-warm" target="_blank">下载模板</a>
 					</div>
 				</shiro:hasRole>
 				

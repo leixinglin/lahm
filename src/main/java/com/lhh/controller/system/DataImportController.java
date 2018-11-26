@@ -2,7 +2,9 @@ package com.lhh.controller.system;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.Format;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -11,7 +13,13 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -140,6 +148,24 @@ public class DataImportController extends BaseController{
         HttpStatus statusCode = HttpStatus.OK;//设置响应吗
         ResponseEntity<byte[]> response=new ResponseEntity<byte[]>(body, headers, statusCode);
         return response;
-
+    }
+    
+    @RequestMapping("/exportExcel")
+    @ResponseBody
+    public void exportExcel(HttpServletRequest request,HttpServletResponse response){
+        try {
+            //获取数据源
+            List<SysData> dataList = SysDataService.findList(null);
+             
+            //导出excel
+            response.setHeader("Content-Disposition","attachment;filename="+new String("data.xlsx".getBytes(),"ISO-8859-1"));
+            response.setContentType("application/x-excel;charset=UTF-8");
+            OutputStream outputStream = response.getOutputStream();
+            //导出
+            ReadExcel.exportExcel(dataList,outputStream);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

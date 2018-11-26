@@ -17,7 +17,7 @@ public class ReceiveConfirmTestListener implements ChannelAwareMessageListener{
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 			
 		} catch (Exception e) {
-			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+			//channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 			e.printStackTrace();
 		}
 	}

@@ -25,10 +25,10 @@ public class TestRabbitMq {
 	@Test
 	public void testRabbitMq() throws InterruptedException{
 		
-//		for(int i=0;i<15;i++){
-//			publisUtil.send("fanoutExchange", "myQueue", "你好 RabbitMQ"+i);
-//			
-//		}
+		/*for(int i=0;i<15;i++){
+			publisUtil.send("fanoutExchange", "myQueue", "你好 RabbitMQ"+i);
+			
+		}*/
 			
 		
 		publisUtil.send("fanoutExchange", "myQueue", "你好 RabbitMQ");

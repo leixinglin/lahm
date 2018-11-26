@@ -32,10 +32,10 @@
   <!--  队列 -->
    <rabbit:queue name="myQueue" auto-declare="true"></rabbit:queue>
    <!-- 交换机 -->
-   <rabbit:fanout-exchange name="fanoutExchange" auto-declare="true" id="fanoutExchange">
-       <rabbit:bindings>
+   <rabbit:fanout-exchange name="fanoutExchange"  auto-declare="true" id="fanoutExchange">
+       <rabbit:bindings >
            
-           <rabbit:binding queue="myQueue">
+           <rabbit:binding  queue="myQueue">
                
            </rabbit:binding>
        </rabbit:bindings>
@@ -44,7 +44,7 @@
    
    <!-- 消费者 -->
    <!-- 定义监听容易，收到消息执行内部配置 -->
-   <rabbit:listener-container connection-factory="rabbitFactory" acknowledge="manual" concurrency= "50">
+   <rabbit:listener-container connection-factory="rabbitFactory" acknowledge="manual" concurrency= "200">
        
        <rabbit:listener ref="receiveConfirmTestListener"  queues="myQueue" response-routing-key="myQueue"/>
        
