@@ -42,7 +42,6 @@
 <script type="text/javascript">
 		$(function() {
 	                var websocket;
-					
 	                if('WebSocket' in window) {
 	                                        console.log("此浏览器支持websocket");
 	                    websocket = new WebSocket("ws://${basePath}websocketDemo/${userId}");
@@ -68,14 +67,28 @@
 									}
 							 } 
 						}else{
-							var infoNum=$(".infoNum_"+result.code).find("span");
-							infoNum.text(parseInt(infoNum.text())+1);
+							
 							console.log(result.code);
 							console.log(result.message);
 							
 							if(document.getElementById('socketFrame'+result.code)!=null){
 								var frameId=document.getElementById('socketFrame'+result.code).getElementsByTagName("iframe")[0].id;
 								$('#'+frameId)[0].contentWindow.appendInfo(result.message);
+							}else{
+								var infoNum=$(".infoNum_"+result.code).find("span");
+								infoNum.text(parseInt(infoNum.text())+1);
+								
+								var messageList=[];
+								var messageListStr=sessionStorage.getItem('messages'+result.code);
+								console.log("str:"+messageListStr);
+								if(messageListStr!=null&&messageListStr!=''){
+									console.log(666666);
+									messageList=JSON.parse( messageListStr );
+								}
+								
+								messageList.push(result.message.trim());
+								console.log(messageList);
+								sessionStorage.setItem('messages'+result.code,JSON.stringify(messageList));
 							}
 							//console.log("frameId"+frameId);
 						}
@@ -125,7 +138,9 @@
 					  anim:2,
 					  area: ['600px', '600px'],
 					  maxmin:true,
-					  id:"socketFrame"+userId
+					  id:"socketFrame"+userId,
+					  shadeClose:true,
+					  shade:0
 				}); 
 				 
 				//console.log(saveOpen);

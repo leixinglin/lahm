@@ -37,7 +37,10 @@
 				<!-- 登录相关不拦截 -->
 				/static/**=anon
 				/user/**/=anon
-				/index=authc,roles[admin]
+				/index=anon
+				/message/**/=anon
+				/websocketDemo/**/=anon
+				/data=authc,roles[admin]
 				<!-- /index=authc,roles[admin,user] --><!--只有管理员可以访问，其他角色可以看到但是不能访问，会自动跳入unauthorizedUrl对应的控制器，若设置了shiro 
 					标签，其他角色看都看不到 -->
 				/**=authc

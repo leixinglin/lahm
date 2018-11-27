@@ -46,8 +46,14 @@
 
 	<script src="${ctx}/static/layui/layui.js"></script>
 	<script type="text/javascript">
+		var messageList=[];
+		var messageListStr=sessionStorage.getItem('messages'+${userId});
+		messageList=JSON.parse( messageListStr );
+		for(j = 0,len=messageList.length; j < len; j++) {
+			appendInfo(messageList[j]);
+		}
+		console.log(messageList);
 		function appendInfo(message){
-			
 			var infoStr="<div class='user_info'><span class='text'>"+message+"</span></div>";
 			$("#infoTab").append(infoStr);
 		}

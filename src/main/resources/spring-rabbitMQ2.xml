@@ -13,6 +13,7 @@
 	
     
    <context:component-scan base-package="com.lhh.rabbitMq"></context:component-scan>
+   
    <bean id="jsonMessageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter"></bean>
     <!-- 定义链接工厂 -->
     <rabbit:connection-factory id="rabbitFactory" 
@@ -30,12 +31,12 @@
    <rabbit:admin connection-factory="rabbitFactory"/>
   	
   <!--  队列 -->
-   <rabbit:queue name="myQueue" auto-declare="true"></rabbit:queue>
+   <rabbit:queue name="myQueue"  auto-declare="true" ></rabbit:queue>
    <!-- 交换机 -->
    <rabbit:fanout-exchange name="fanoutExchange"  auto-declare="true" id="fanoutExchange">
        <rabbit:bindings >
            
-           <rabbit:binding  queue="myQueue">
+           <rabbit:binding  queue="myQueue" >
                
            </rabbit:binding>
        </rabbit:bindings>
@@ -46,7 +47,7 @@
    <!-- 定义监听容易，收到消息执行内部配置 -->
    <rabbit:listener-container connection-factory="rabbitFactory" acknowledge="manual" concurrency= "200">
        
-       <rabbit:listener ref="receiveConfirmTestListener"  queues="myQueue" response-routing-key="myQueue"/>
+       <rabbit:listener ref="receiveConfirmTestListener"  queues="myQueue"  response-routing-key="myQueue"/>
        
        
    </rabbit:listener-container>
