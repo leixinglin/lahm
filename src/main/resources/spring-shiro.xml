@@ -39,6 +39,7 @@
 				/user/**/=anon
 				/index=anon
 				/message/**/=anon
+				/jsoup/**/=anon
 				/websocketDemo/**/=anon
 				/data=authc,roles[admin]
 				<!-- /index=authc,roles[admin,user] --><!--只有管理员可以访问，其他角色可以看到但是不能访问，会自动跳入unauthorizedUrl对应的控制器，若设置了shiro 
