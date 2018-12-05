@@ -36,7 +36,7 @@ public class TestRabbitMq {
 		
 	}
 	
-	/*@Test
+	@Test
 	public void testRabbitMq1(){
 		ApplicationContext app=new ClassPathXmlApplicationContext("classpath:spring-rabbitMQ.xml");
 		RabbitTemplate template=app.getBean(RabbitTemplate.class);
@@ -47,5 +47,5 @@ public class TestRabbitMq {
 		System.out.println("完成");
 		//((ClassPathXmlApplicationContext)app).destroy();
 		
-	}*/
+	}
 }

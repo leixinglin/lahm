@@ -12,11 +12,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.lhh.common.PageData;
 import com.lhh.utils.Tools;
 
 @Controller
@@ -26,11 +28,21 @@ public class JsoupController {
 	@RequestMapping("/list")
 	public ModelAndView list(String webUrl) throws IOException {
 		ModelAndView mv=new ModelAndView("jsoup/list");
+	
+		return mv;
+	}
+	
+	@RequestMapping("/get")
+	@ResponseBody
+	public Object get(String webUrl) throws IOException {
 		
+		PageData pd=new PageData();
+		pd.put("code", 0);
+		pd.put("message", "请输入链接！");
 		if(Tools.notEmpty(webUrl)) {
 			List<com.lhh.pojo.Jsoup> jsoupList=new ArrayList<>();
 			if(webUrl.startsWith("https://www.amazon.cn")) {
-				
+				pd.put("code", 1);
 				Document doc=Jsoup.connect(webUrl).get();
 				Element container=doc.select("#container").first().select("#mainResults").first();
 				Elements lis=container.select(".s-result-list li");
@@ -44,6 +56,7 @@ public class JsoupController {
 					String brand=li.select(".a-row.a-spacing-none").eq(1).text();
 					jsoupList.add(new com.lhh.pojo.Jsoup(name, price, url, imgUrl, brand));
 				}
+				
 			}else if(webUrl.startsWith("https://list.jd.com")){
 				//构造一个webClient 模拟Chrome 浏览器
 				WebClient webClient = new WebClient(BrowserVersion.CHROME);
@@ -78,8 +91,14 @@ public class JsoupController {
 					jsoupList.add(new com.lhh.pojo.Jsoup(name, price, url, imgUrl, sales));
 				}
 			}
-			mv.addObject("jsoupList", jsoupList);
+			if(jsoupList.size()>0){
+				pd.put("code", 1);
+				pd.put("message", jsoupList);
+			}else{
+				pd.put("message", "无法获取！");
+			}
+			
 		}
-		return mv;
+		return pd;
 	}
 }

@@ -2406,6 +2406,9 @@ a cite {
 .layui-form-pane .layui-form-item[pane] .layui-input-inline {
 	margin-left: 110px
 }
+.layui-form-item .webUrl{
+		width: 95%;
+	}
 
 @media screen and (max-width:450px) {
 	.layui-form-item .layui-form-label {
@@ -2431,6 +2434,9 @@ a cite {
 		left: -3px;
 		width: auto;
 		margin: 0 0 10px 112px
+	}
+	.layui-form-item .webUrl{
+		margin: 0px 0px 0px 0px;
 	}
 	.layui-form-item .layui-input-inline+.layui-form-mid {
 		margin-left: 110px;
