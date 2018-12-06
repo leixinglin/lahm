@@ -15,9 +15,9 @@ public class TestTask {
 	private UsersService usersService;
 	
 	//没分钟
-	@Scheduled(cron = "0 0/5 * * * ?")
+	/*@Scheduled(cron = "0 0/5 * * * ?")
 	public void test(){
 		//System.out.println(usersService.findAll().size());
 		System.out.println("hello ssm");
-	}
+	}*/
 }

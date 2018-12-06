@@ -45,13 +45,15 @@ public class JsoupController {
 				pd.put("code", 1);
 				Document doc=Jsoup.connect(webUrl).get();
 				Element container=doc.select("#container").first().select("#mainResults").first();
-				Elements lis=container.select(".s-result-list li");
+				Elements lis=container.select(".s-result-list li.s-result-item");
 				for(int i=0;i<lis.size();i++) {
 					Element li=lis.eq(i).first();
-					Element good =li.select(".a-link-normal.s-access-detail-page.s-color-twister-title-link.a-text-normal").first();
+					//System.out.println(li.html());
+					Element good =li.select(".a-link-normal.a-text-normal").first();
+					
 					String url=good.attr("href");
-					String name=good.select("h2").text();
-					String imgUrl=li.select(".s-access-image.cfMarker").attr("src");
+					String name=good.select("img").attr("alt");
+					String imgUrl=good.select("img").attr("src");
 					String price=li.select(".a-size-base.a-color-price.s-price.a-text-bold").text();
 					String brand=li.select(".a-row.a-spacing-none").eq(1).text();
 					jsoupList.add(new com.lhh.pojo.Jsoup(name, price, url, imgUrl, brand));

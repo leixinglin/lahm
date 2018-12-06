@@ -17,7 +17,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 public class TestJava {
-	private static final String URL="https://www.amazon.cn/b/ref=sa_menu_office_l3_b106200071?ie=UTF8&node=106200071";
+	private static final String URL="https://www.amazon.cn/s/ref=sa_menu_digita_l3_siphone?ie=UTF8&page=1&rh=n%3A665002051%2Cp_89%3AApple%2Cn%3A664978051";
 	public static void main(String[] args) throws IOException {
 		Document doc=Jsoup.connect(URL).get();
 		Element container=doc.select("#container").first().select("#mainResults").first();
